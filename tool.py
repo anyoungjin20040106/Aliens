@@ -41,9 +41,6 @@ class Alien(BaseModel):
 
 # 데이터베이스 인터페이스 추상 클래스
 class DB(ABC):
-    @property
-    def path():
-        return 'aliens.db'  # 데이터베이스 파일 경로 지정
 
     @abstractmethod
     def select(self, id=''):
@@ -69,7 +66,7 @@ class DB(ABC):
 class AlienTable(DB):
     def select(self, id=''):
         """Alien 테이블에서 데이터를 조회"""
-        con = sqlite3.connect(super().path)
+        con = sqlite3.connect('aliens.db')
         try:
             df = pd.read_sql_query("SELECT * FROM alien WHERE id=?", con, params=(id,)) if id!='' else pd.read_sql_query("SELECT * FROM alien", con)
             con.close()
@@ -79,7 +76,7 @@ class AlienTable(DB):
     
     def delete(self, id=''):
         """Alien 테이블에서 특정 ID의 데이터를 삭제"""
-        con = sqlite3.connect(super().path)
+        con = sqlite3.connect('aliens.db')
         try:
             if not id:
                 return "인자좀 넣어라"
@@ -95,7 +92,7 @@ class AlienTable(DB):
     
     def update(self, alien: Alien):
         """Alien 테이블에서 특정 ID의 데이터를 수정"""
-        con = sqlite3.connect(super().path)
+        con = sqlite3.connect('aliens.db')
         try:
             if not alien.id:
                 return "인자좀 넣어라"
@@ -156,7 +153,7 @@ class ExplorerTable(DB):
     
     def delete(self, id=''):
         """Explorer 테이블에서 특정 ID의 데이터를 삭제"""
-        con = sqlite3.connect(super().path)
+        con = sqlite3.connect('aliens.db')
         try:
             if not id:
                 return "인자좀 넣어라"
@@ -172,7 +169,7 @@ class ExplorerTable(DB):
     
     def update(self, explorer: Explorer):
         """Explorer 테이블에서 특정 ID의 데이터를 수정"""
-        con = sqlite3.connect(super().path)
+        con = sqlite3.connect('aliens.db')
         try:
             if not explorer.id:
                 return "인자좀 넣어라"
