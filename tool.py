@@ -71,7 +71,7 @@ class AlienTable(DB):
         """Alien 테이블에서 데이터를 조회"""
         con = sqlite3.connect(super().path)
         try:
-            df = pd.read_sql_query("SELECT * FROM alien WHERE id=?", con, params=(id,)) if id else pd.read_sql_query("SELECT * FROM alien", con)
+            df = pd.read_sql_query("SELECT * FROM alien WHERE id=?", con, params=(id,)) if id!='' else pd.read_sql_query("SELECT * FROM alien", con)
             con.close()
             return df if len(df) else "해당 아이디가 존재하지 않습니다"
         except:
@@ -132,7 +132,7 @@ class ExplorerTable(DB):
         """Explorer 테이블에서 데이터를 조회"""
         con = sqlite3.connect('aliens.db')
         try:
-            df = pd.read_sql_query("SELECT * FROM explorer WHERE id=?", con, params=(id,)) if id else pd.read_sql_query("SELECT * FROM explorer", con)
+            df = pd.read_sql_query("SELECT * FROM explorer WHERE id=?", con, params=(id,)) if id!='' else pd.read_sql_query("SELECT * FROM explorer", con)
             con.close()
             return df
         except:
