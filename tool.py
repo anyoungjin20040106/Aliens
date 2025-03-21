@@ -3,25 +3,13 @@ from pydantic import BaseModel
 import pandas as pd
 from abc import ABC, abstractmethod
 
-# 한국어 칼럼 관리 클래스
-class KoreanColumn:
+class KoreanCol:
     @staticmethod
-    def explorer():
-        return ['아이디', '이름', '계급', '소속 함선', '종족']
-    
+    def Alien():
+        return ['아이디 ','이름 ','종족 ','출신 행성 ','소속 ']
     @staticmethod
-    def alien():
-        return ['아이디', '이름', '종족', '출신행성', '소속']
-
-# 영어 칼럼 관리 클래스
-class EnglishColumn:
-    @staticmethod
-    def explorer():
-        return ['id', 'name', 'rank', 'assignment', 'species']
-    
-    @staticmethod
-    def alien():
-        return ['id', 'name', 'species', 'homeworld', 'affiliation']
+    def Explorer():
+        return ['아이디 ','이름 ','계급 ','소속 함선 ','종족 ']
 
 # 탐험가(Explorer) 데이터 모델
 class Explorer(BaseModel):
@@ -34,6 +22,20 @@ class Explorer(BaseModel):
 # 외계인(Alien) 데이터 모델
 class Alien(BaseModel):
     id: int
+    name: str
+    species: str
+    homeworld: str
+    affiliation: str
+
+# 탐험가(Explorer) 업데이트용 모델
+class ExplorerUpdate (BaseModel):
+    name: str
+    rank: str
+    assignment: str
+    species: str
+
+# 외계인(Alien) 업데이트용 모델
+class AlienUpdate (BaseModel):
     name: str
     species: str
     homeworld: str
@@ -53,7 +55,7 @@ class DB(ABC):
         pass
 
     @abstractmethod
-    def update(self, obj):
+    def update(self, id:str, obj):
         """UPDATE 기능 (각 자식 클래스에서 구현)"""
         pass
 
@@ -70,7 +72,7 @@ class AlienTable(DB):
         try:
             df = pd.read_sql_query("SELECT * FROM alien WHERE id=?", con, params=(id,)) if id!='' else pd.read_sql_query("SELECT * FROM alien", con)
             con.close()
-            return df if len(df) else "해당 아이디가 존재하지 않습니다"
+            return df
         except:
             return None
     
@@ -90,17 +92,15 @@ class AlienTable(DB):
         except Exception as e:
             return f'예외 사항 : {e}'
     
-    def update(self, alien: Alien):
+    def update(self, id:str,alien: AlienUpdate):
         """Alien 테이블에서 특정 ID의 데이터를 수정"""
         con = sqlite3.connect('aliens.db')
         try:
-            if not alien.id:
-                return "인자좀 넣어라"
             cursor = con.cursor()
-            if not len(self.select(alien.id)):
+            if not len(self.select(id)):
                 return '해당 아이디가 존재하지 않습니다'
             cursor.execute("UPDATE alien SET affiliation=?, species=?, homeworld=?, name=? WHERE id=?",
-                           (alien.affiliation, alien.species, alien.homeworld, alien.name, alien.id))
+                           (alien.affiliation, alien.species, alien.homeworld, alien.name, id))
             con.commit()
             con.close()
             return "수정 완료"
@@ -115,7 +115,7 @@ class AlienTable(DB):
             cursor.execute("INSERT INTO alien VALUES(?,?,?,?,?)", (alien.id, alien.name, alien.species, alien.homeworld, alien.affiliation))
             con.commit()
             con.close()
-            return "추가되었습니다"
+            return "추가됐습니다"
         except sqlite3.IntegrityError:
             con.close()
             return "이미 존재하는 아이디 입니다"
@@ -143,7 +143,7 @@ class ExplorerTable(DB):
             cursor.execute("INSERT INTO explorer VALUES(?,?,?,?,?)", (explorer.id, explorer.name, explorer.rank, explorer.assignment, explorer.species))
             con.commit()
             con.close()
-            return "추가되었습니다"
+            return "추가됐습니다"
         except sqlite3.IntegrityError:
             con.close()
             return "이미 존재하는 아이디 입니다"
@@ -167,19 +167,19 @@ class ExplorerTable(DB):
         except Exception as e:
             return f'예외 사항 : {e}'
     
-    def update(self, explorer: Explorer):
+    def update(self, id:str,explorer: ExplorerUpdate):
         """Explorer 테이블에서 특정 ID의 데이터를 수정"""
         con = sqlite3.connect('aliens.db')
         try:
-            if not explorer.id:
-                return "인자좀 넣어라"
             cursor = con.cursor()
-            if not len(self.select(explorer.id)):
+            if not len(self.select(id)):
                 return '해당 아이디가 존재하지 않습니다'
             cursor.execute("UPDATE explorer SET assignment=?, species=?, rank=?, name=? WHERE id=?",
-                           (explorer.assignment, explorer.species, explorer.rank, explorer.name, explorer.id))
+                           (explorer.assignment, explorer.species, explorer.rank, explorer.name,id))
             con.commit()
             con.close()
             return "수정 완료"
         except Exception as e:
             return f'예외 사항 : {e}'
+class ID(BaseModel):
+    id:int
