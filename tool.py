@@ -157,7 +157,7 @@ class ExplorerTable(DB):
             cursor.execute("INSERT INTO explorer VALUES(?,?,?,?,?)", (explorer.id, explorer.name, explorer.rank, explorer.assignment, explorer.species))
             con.commit()
             con.close()
-            return "추가됐습니다"
+            return "추가 완료"
         except sqlite3.IntegrityError:
             con.close()
             return "이미 존재하는 아이디 입니다"
