@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import pandas as pd
 from abc import ABC, abstractmethod
 
+#DB 필드명 한국어 칼럼
 class KoreanCol:
     @staticmethod
     def Alien():
@@ -10,7 +11,7 @@ class KoreanCol:
     @staticmethod
     def Explorer():
         return ['아이디 ','이름 ','계급 ','소속 함선 ','종족 ']
-
+    
 # 탐험가(Explorer) 데이터 모델
 class Explorer(BaseModel):
     id: int
@@ -84,12 +85,15 @@ class AlienTable(DB):
                 return "인자좀 넣어라"
             cursor = con.cursor()
             if not len(self.select(id)):
+                print('해당 아이디가 존재하지 않습니다')
                 return '해당 아이디가 존재하지 않습니다'
             cursor.execute("DELETE FROM alien WHERE id=?", (id,))
             con.commit()
             con.close()
+            print("삭제 완료")
             return "삭제 완료"
         except Exception as e:
+            print(f'예외 사항 : {e}')
             return f'예외 사항 : {e}'
     
     def update(self, id:str,alien: AlienUpdate):
@@ -115,7 +119,7 @@ class AlienTable(DB):
             cursor.execute("INSERT INTO alien VALUES(?,?,?,?,?)", (alien.id, alien.name, alien.species, alien.homeworld, alien.affiliation))
             con.commit()
             con.close()
-            return "추가됐습니다"
+            return "추가 완료"
         except sqlite3.IntegrityError:
             con.close()
             return "이미 존재하는 아이디 입니다"

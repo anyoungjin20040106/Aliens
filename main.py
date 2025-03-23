@@ -44,16 +44,14 @@ def insert(explorer:Explorer=Form(...)):
     return {"msg":table.insert(explorer)}
 
 @app.put("/aliens/{alien_id}")
-def update(alien_id: int,alien:AlienUpdate=Form(...)):
+def update(alien_id: int,alien:AlienUpdate):
     table=AlienTable()
-    table.update(str(alien_id),alien)
-    return {"msg":table.insert(alien)}
+    return {"msg":table.update(str(alien_id),alien)}
 
 @app.put("/explorers/{explorer_id}")
-def update(explorer_id: int,explorer:ExplorerUpdate=Form(...)):
+def update(explorer_id: int,explorer:ExplorerUpdate):
     table=ExplorerTable()
-    table.update(str(explorer_id),explorer)
-    return {"msg":table.insert(explorer)}
+    return {"msg":table.update(str(explorer_id),explorer)}
 
 @app.delete("/aliens/{alien_id}")
 def delete(alien_id: int):
@@ -63,8 +61,10 @@ def delete(alien_id: int):
 @app.delete("/explorers/{explorer_id}")
 def delete(explorer_id: int):
     table=ExplorerTable()
-    return {"msg":table.delete(explorer_id)}
+    result=table.delete(explorer_id)
+    print(f"결과 : {result}")
+    return {"msg":result}
 
-@app.get("/filed")
-def filed():
-    pass
+@app.get("/key/{kind}")
+def Key(kind:str):
+    return {"key":KoreanCol.Alien() if kind=="aliens" else KoreanCol.Explorer()}
