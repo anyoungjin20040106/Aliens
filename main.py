@@ -1,6 +1,6 @@
 from fastapi import FastAPI,Form
 from tool import Explorer,Alien,AlienTable,ExplorerTable,ExplorerUpdate,AlienUpdate,KoreanCol
-
+import pandas as pd
 app=FastAPI()
 
 @app.get("/explorers")
@@ -68,3 +68,13 @@ def delete(explorer_id: int):
 @app.get("/key/{kind}")
 def Key(kind:str):
     return {"key":KoreanCol.Alien() if kind=="aliens" else KoreanCol.Explorer()}
+
+@app.get("/ishasuser/{kind}/{id}")
+def Key(kind:str,id:int):
+    table:AlienTable|ExplorerTable
+    if kind=='aliens':
+        table=AlienTable()
+    else:
+        table=ExplorerTable()
+    df=table.select(str(id))
+    return {"msg": '존재'if bool(len(df))else'해당 아이디가 존재하지 않습니다'}

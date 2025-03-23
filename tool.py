@@ -112,11 +112,14 @@ class AlienTable(DB):
         try:
             cursor = con.cursor()
             if not len(self.select(id)):
+                con.close()
+                print('해당 아이디가 존재하지 않습니다')
                 return '해당 아이디가 존재하지 않습니다'
             cursor.execute("UPDATE alien SET affiliation=?, species=?, homeworld=?, name=? WHERE id=?",
                            (alien.affiliation, alien.species, alien.homeworld, alien.name, id))
             con.commit()
             con.close()
+            print("수정 완료")
             return "수정 완료"
         except Exception as e:
             return f'예외 사항 : {e}'
