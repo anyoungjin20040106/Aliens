@@ -1,3 +1,13 @@
+'''
+이 과제는 웹과 fastapi의 연동이 흔해 빠져서 싫어하고 
+unity와 fastapi의 연동은 특별해서 좋아하며
+(저도 이 이유 떄문에 fastapi와 unity의 연동을 좋아합니다)
+제가 가르치고 있는 중학생이랑 같이 풀었습니다
+이 중학생은 SQL을 할줄몰라서 
+제가 DB를 다루는 클래스,
+한국어 칼럼을 가져오는 클래스,
+그리고 입력모델이 있는 tool모듈을 만들었습니다
+'''
 import sqlite3
 from pydantic import BaseModel
 import pandas as pd
@@ -185,5 +195,3 @@ class ExplorerTable(DB):
             return "수정 완료"
         except Exception as e:
             return f'예외 사항 : {e}'
-class ID(BaseModel):
-    id:int
