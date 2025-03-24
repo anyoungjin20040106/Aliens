@@ -5,9 +5,9 @@
 한국어 칼럼을 가져오는 클래스,
 그리고 입력모델이 있는 tool모듈을 만들었고
 또한 웹과 fastapi의 연동이 흔해 빠져서 싫어하고 
-unity와 fastapi의 연동은 특별해서 좋아하기 때문에
-(저도 이 이유 떄문에 fastapi와 unity의 연동을 좋아합니다)
-웹에다가 데이터를 뿌리지 않고 유니티에다가 데이터를 뿌리기로 했습니다
+unity와 fastapi의 연동은 특별해서 도전적이라 좋아하기 때문에
+(저도 제 학생의 생각의 동의합니다)
+웹에다가 fastapi를 연동하지 않고 유니티에다가 fastapi를 연동하기로 했습니다
 '''
 import sqlite3
 from pydantic import BaseModel
