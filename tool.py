@@ -23,37 +23,36 @@ class KoreanCol:
     def Explorer():
         return ['아이디 ','이름 ','계급 ','소속 함선 ','종족 ']
     
-# 탐험가(Explorer) 데이터 모델
+# 탐험가 데이터를 표현하는 틀
 class Explorer(BaseModel):
-    id: int
-    name: str
-    rank: str
-    assignment: str
-    species: str
+    id: int            # 탐험가 고유 번호
+    name: str          # 이름
+    rank: str          # 계급 (ex. 선장, 부선장 등)
+    assignment: str    # 어떤 함선에 배정됐는지
+    species: str       # 종족
 
-# 외계인(Alien) 데이터 모델
+# 외계인 데이터를 표현하는 틀
 class Alien(BaseModel):
-    id: int
-    name: str
-    species: str
-    homeworld: str
-    affiliation: str
+    id: int            # 외계인 고유 번호
+    name: str          # 이름
+    species: str       # 종족
+    homeworld: str     # 출신 행성
+    affiliation: str   # 소속 (어디 조직에 소속됐는지)
 
-# 탐험가(Explorer) 업데이트용 모델
-class ExplorerUpdate (BaseModel):
+# 업데이트할 때 쓸 데이터 틀 (id는 수정 안 하니까 없음)
+class ExplorerUpdate(BaseModel):
     name: str
     rank: str
     assignment: str
     species: str
 
-# 외계인(Alien) 업데이트용 모델
-class AlienUpdate (BaseModel):
+class AlienUpdate(BaseModel):
     name: str
     species: str
     homeworld: str
     affiliation: str
 
-# 데이터베이스 인터페이스 추상 클래스
+# 데이터베이스 클래스들의 틀
 class DB(ABC):
 
     @abstractmethod
