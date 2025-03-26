@@ -9,6 +9,11 @@ explorers_router = APIRouter(prefix="/explorers", tags=["explorers"])
 aliens_router = APIRouter(prefix="/aliens", tags=["aliens"])
 # =====================[ 탐험가 관련 API ]=====================
 
+
+# ▶ 탐험가 한글 컬럼명 가져오기 (GET /explorers/key)
+@explorers_router.get("/key")
+def Key():
+    return {"key": KoreanCol.Explorer()}
 # ▶ 모든 탐험가 정보 가져오기 (GET /explorers)
 @explorers_router.get("/")
 def index():
@@ -43,8 +48,14 @@ def update(explorer_id: int, explorer: ExplorerUpdate):
 def delete(explorer_id: int):
     table = ExplorerTable()
     result = table.delete(explorer_id)
-    print(f"결과 : {result}")
     return {"msg": result}
+
+# ▶ 특정 탐험가 ID가 존재하는지 확인 (GET /explorers/ishasuser/{id})
+@explorers_router.get("/ishasuser/{id}")
+def Key(id: int):
+    table = ExplorerTable()
+    df = table.select(str(id))
+    return {"msg": '존재' if bool(len(df)) else '해당 아이디가 존재하지 않습니다'}
 
 
 # =====================[ 외계인 관련 API ]=====================
@@ -58,6 +69,11 @@ def index():
     for row in df.values:
         result['data'].append(dict(zip(df.columns, row)))
     return result
+
+# ▶ 외계인 한글 컬럼명 가져오기 (GET /aliens/key)
+@aliens_router.get("/key")
+def Key():
+    return {"key": KoreanCol.Alien()}
 
 # ▶ 특정 외계인 정보 가져오기 (GET /aliens/{alien_id})
 @aliens_router.get("/{alien_id}")
@@ -84,24 +100,11 @@ def delete(alien_id: int):
     table = AlienTable()
     return {"msg": table.delete(alien_id)}
 
-
-# =====================[ 기타 기능 API ]=====================
-
-# ▶ 테이블 종류에 따른 한글 컬럼명 가져오기 (GET /key/{kind})
-@app.get("/key/{kind}")
-def Key(kind: str):
-    return {"key": KoreanCol.Alien() if kind == "aliens" else KoreanCol.Explorer()}
-
-# ▶ 특정 ID가 존재하는지 확인 (GET /ishasuser/{kind}/{id})
-@app.get("/ishasuser/{kind}/{id}")
-def Key(kind: str, id: int):
-    table: AlienTable | ExplorerTable
-    if kind == 'aliens':
-        table = AlienTable()
-    else:
-        table = ExplorerTable()
+# ▶ 특정 외계인 ID가 존재하는지 확인 (GET /aliens/ishasuser/{id})
+@aliens_router.get("/ishasuser/{id}")
+def Key( id: int):
+    table = AlienTable()
     df = table.select(str(id))
     return {"msg": '존재' if bool(len(df)) else '해당 아이디가 존재하지 않습니다'}
-
 app.include_router(explorers_router)
 app.include_router(aliens_router)
