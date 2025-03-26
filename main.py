@@ -1,13 +1,16 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, Form,APIRouter
 from tool import Explorer, Alien, AlienTable, ExplorerTable, ExplorerUpdate, AlienUpdate, KoreanCol
 
 # FastAPI 인스턴스 생성 (여기가 서버의 시작점!)
-app = FastAPI()
-
+app = FastAPI(title="Starfleet Data Management System",
+              description="이 시스템은 **탐험가와 외계인의 정보를 효율적으로 관리하기 위한 API**입니다."
+              )
+explorers_router = APIRouter(prefix="/explorers", tags=["explorers"])
+aliens_router = APIRouter(prefix="/aliens", tags=["aliens"])
 # =====================[ 탐험가 관련 API ]=====================
 
 # ▶ 모든 탐험가 정보 가져오기 (GET /explorers)
-@app.get("/explorers")
+@explorers_router.get("/")
 def index():
     explorer = ExplorerTable()
     df = explorer.select()
@@ -17,26 +20,26 @@ def index():
     return result
 
 # ▶ 특정 탐험가 정보 가져오기 (GET /explorers/{explorer_id})
-@app.get("/explorers/{explorer_id}")
+@explorers_router.get("/{explorer_id}")
 def index(explorer_id: int):
     explorer = ExplorerTable()
     df = explorer.select(explorer_id)
     return dict(zip(df.columns, df.values[0] if bool(len(df)) else [''] * len(df.columns)))
 
 # ▶ 탐험가 추가하기 (POST /explorers)
-@app.post("/explorers")
+@explorers_router.post("/")
 def insert(explorer: Explorer = Form(...)):
     table = ExplorerTable()
     return {"msg": table.insert(explorer)}
 
 # ▶ 탐험가 정보 수정하기 (PUT /explorers/{explorer_id})
-@app.put("/explorers/{explorer_id}")
+@explorers_router.put("/{explorer_id}")
 def update(explorer_id: int, explorer: ExplorerUpdate):
     table = ExplorerTable()
     return {"msg": table.update(str(explorer_id), explorer)}
 
 # ▶ 탐험가 삭제하기 (DELETE /explorers/{explorer_id})
-@app.delete("/explorers/{explorer_id}")
+@explorers_router.delete("/{explorer_id}")
 def delete(explorer_id: int):
     table = ExplorerTable()
     result = table.delete(explorer_id)
@@ -47,7 +50,7 @@ def delete(explorer_id: int):
 # =====================[ 외계인 관련 API ]=====================
 
 # ▶ 모든 외계인 정보 가져오기 (GET /aliens)
-@app.get("/aliens")
+@aliens_router.get("/")
 def index():
     alien = AlienTable()
     df = alien.select()
@@ -57,26 +60,26 @@ def index():
     return result
 
 # ▶ 특정 외계인 정보 가져오기 (GET /aliens/{alien_id})
-@app.get("/aliens/{alien_id}")
+@aliens_router.get("/{alien_id}")
 def index(alien_id: int):
     alien = AlienTable()
     df = alien.select(alien_id)
     return dict(zip(df.columns, df.values[0] if bool(len(df)) else [''] * len(df.columns)))
 
 # ▶ 외계인 추가하기 (POST /aliens)
-@app.post("/aliens")
+@aliens_router.post("/")
 def insert(alien: Alien = Form(...)):
     table = AlienTable()
     return {"msg": table.insert(alien)}
 
 # ▶ 외계인 정보 수정하기 (PUT /aliens/{alien_id})
-@app.put("/aliens/{alien_id}")
+@aliens_router.put("/{alien_id}")
 def update(alien_id: int, alien: AlienUpdate):
     table = AlienTable()
     return {"msg": table.update(str(alien_id), alien)}
 
 # ▶ 외계인 삭제하기 (DELETE /aliens/{alien_id})
-@app.delete("/aliens/{alien_id}")
+@aliens_router.delete("/{alien_id}")
 def delete(alien_id: int):
     table = AlienTable()
     return {"msg": table.delete(alien_id)}
@@ -99,3 +102,6 @@ def Key(kind: str, id: int):
         table = ExplorerTable()
     df = table.select(str(id))
     return {"msg": '존재' if bool(len(df)) else '해당 아이디가 존재하지 않습니다'}
+
+app.include_router(explorers_router)
+app.include_router(aliens_router)
