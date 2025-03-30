@@ -1,14 +1,3 @@
-'''
-이 과제는 제가 가르치고 있는 학생인 중학생이랑 같이 풀었습니다
-이 중학생(2000년생을 아저씨 아줌마라고 생각함)은 SQL을 할줄몰라서 
-제가 DB를 다루는 클래스,
-한국어 칼럼을 가져오는 클래스,
-그리고 입력모델이 있는 tool모듈을 만들었고
-또한 제 학생이 웹과 fastapi 그리고 파이썬과 fastapi의 연동이 흔해 빠져서 싫어하고 
-unity와 fastapi의 연동은 특별해서 도전적이라 좋아하기 때문에
-(저도 제 학생의 생각의 동의합니다)
-웹에다가 fastapi를 연동하지 않고 유니티에다가 fastapi를 연동하기로 했습니다
-'''
 import sqlite3
 from pydantic import BaseModel
 import pandas as pd
